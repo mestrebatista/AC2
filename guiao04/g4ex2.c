@@ -11,8 +11,8 @@ void delay(int ms)
 
 int main(void)
 {
-  LATE= LATE & 0xFFF0;
-  TRISE= TRISE & 0xFFF0;
+  LATE= LATE & 0xFFF0;    // deixar os outputs a zero
+  TRISE= TRISE & 0xFFF0;  // interpreta-se como output os portos
 
   int count=0;
 
