@@ -30,5 +30,19 @@ void send2displays(unsigned char value)
 
 int main(void)
 {
+  unsigned char counter=0;
+
+  LATB=LATB & 0x80FF;
+  LATD=LATD & 0xFF9F;
+
+  TRISB=(TRISB & 0x80FF);
+  TRISD=(TRISD & 0xFF9F);
+  while (1)
+  {
+    send2displays(counter);
+    delay(200);
+    counter=(counter+1)%256;
+
+  }
   return 0;
 }
