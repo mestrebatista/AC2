@@ -1,4 +1,13 @@
+#include <detpic32.h>
 
+void delay(int ms)
+{
+  for (; ms > 0;ms--)
+  {
+    resetCoreTimer();
+    while(readCoreTimer()<200000);
+  }
+}
 void send2displays(unsigned char value)
 {
   static const char display7Scodes[] = {0x3F, 0x06, 0x5B, 0x4F,\
@@ -17,4 +26,23 @@ void send2displays(unsigned char value)
   LATDbits.LATD5=1;
   LATDbits.LATD6=0;
   LATB= (LATB & 0x80FF) | (display7Scodes[dl]<<8);
+}
+
+int main(void)
+{
+  unsigned char counter=0;
+
+  LATB=LATB & 0x80FF;
+  LATD=LATD & 0xFF9F;
+
+  TRISB=(TRISB & 0x80FF);
+  TRISD=(TRISD & 0xFF9F);
+  while (1)
+  {
+    send2displays(counter);
+    delay(200);
+    counter=(counter+1)%256;
+
+  }
+  return 0;
 }
