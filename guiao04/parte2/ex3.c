@@ -8,24 +8,33 @@ void delay(int ms)
     while(readCoreTimer()<200000);
   }
 }
+
 void send2displays(unsigned char value)
 {
   static const char display7Scodes[] = {0x3F, 0x06, 0x5B, 0x4F,\
                                         0x66, 0x6D, 0x7D, 0x07,\
                                         0x7F, 0x6F, 0x77, 0x7C,\
                                         0x39, 0x5E, 0x79, 0x71};
-  // send digit_high (dh) to display_high:
-  unsigned char dh = value >> 4;
-  // send digit_low (dl) to display_low:
-  unsigned char dl = value & 0x0F;
-
-  LATDbits.LATD5=0;
-  LATDbits.LATD6=1;
-  LATB= (LATB & 0x80FF) | (display7Scodes[dh]<<8);
-
-  LATDbits.LATD5=1;
-  LATDbits.LATD6=0;
-  LATB= (LATB & 0x80FF) | (display7Scodes[dl]<<8);
+  static char displayFlag = 0; // static variable: doesn't loose its
+                               // value between calls to function
+  unsigned char digit_low = value & 0x0F;
+  unsigned char digit_high = value >> 4;
+  // if "displayFlag" is 0 then send digit_low to display_low
+  // else send digit_high to didplay_high
+  // toggle "displayFlag" variable
+  if (displayFlag==0)
+  {
+    LATDbits.LATD5=1;
+    LATDbits.LATD6=0;
+    LATB=(LATB & 0x80FF) (display7Scodes[digit_low]<<8);
+  }
+  else
+  {
+    LATDbits.LATD5=0;
+    LATDbits.LATD6=1;
+    LATB=(LATB & 0x80FF) (display7Scodes[digit_high]<<8);
+  }
+  displayFlag=!displayFlag;
 }
 
 int main(void)
@@ -39,10 +48,13 @@ int main(void)
   TRISD=(TRISD & 0xFF9F);
   while (1)
   {
-    send2displays(counter);
-    delay(200);
-    counter=(counter+1)%256;
-
+    i = 0;
+    do
+    {
+      send2displays( counter );
+      delay(50);              // wait 50 ms
+    } while(++i < 4);
+    counter=(counter+1)%256;  // increment counter (mod 256)
   }
   return 0;
 }
