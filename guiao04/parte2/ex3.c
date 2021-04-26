@@ -26,13 +26,13 @@ void send2displays(unsigned char value)
   {
     LATDbits.LATD5=1;
     LATDbits.LATD6=0;
-    LATB=(LATB & 0x80FF) (display7Scodes[digit_low]<<8);
+    LATB=(LATB & 0x80FF) | (display7Scodes[digit_low]<<8);
   }
   else
   {
     LATDbits.LATD5=0;
     LATDbits.LATD6=1;
-    LATB=(LATB & 0x80FF) (display7Scodes[digit_high]<<8);
+    LATB=(LATB & 0x80FF) | (display7Scodes[digit_high]<<8);
   }
   displayFlag=!displayFlag;
 }
@@ -40,6 +40,7 @@ void send2displays(unsigned char value)
 int main(void)
 {
   unsigned char counter=0;
+  unsigned int i;
 
   LATB=LATB & 0x80FF;
   LATD=LATD & 0xFF9F;
