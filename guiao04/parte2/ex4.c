@@ -5,7 +5,7 @@ void delay(int ms)
   for (; ms > 0;ms--)
   {
     resetCoreTimer();
-    while(readCoreTimer()<200000);
+    while(readCoreTimer()<20000);
   }
 }
 
