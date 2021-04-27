@@ -53,8 +53,8 @@ int main(void)
     do
     {
       send2displays( counter );
-      delay(20);              // wait 20 ms
-      //delay(10);              // wait 10 ms
+      //delay(20);              // wait 20 ms
+      delay(10);              // wait 10 ms
     } while(++i < 4);
     counter=(counter+1)%256;  // increment counter (mod 256)
   }
